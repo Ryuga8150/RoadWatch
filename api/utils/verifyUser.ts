@@ -1,31 +1,34 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import AppError from "./appError";
-// types.ts or a similar file
-export interface UserPayload {
-  id: string; // or whatever your user ID type is
-  // Add any other properties you expect in the user object
-  name?: string;
+import { IUser } from "./types"; // Adjust the import if necessary
+
+interface MYRequest extends Request {
+  user?: IUser;
 }
 
-export interface JwtError extends Error {
-  name: string;
-  message: string;
-  // Include any other properties you expect in the JWT error
-}
-
-export const verifyUser = (req: Request, res: Response, next: NextFunction) => {
+export const verifyUser = (
+  req: MYRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const token = req.cookies.jwt;
 
   if (!token) {
     return next(new AppError("Unauthorized", 401));
   }
 
-  jwt.verify(token, process.env.JWT_SECRET as string, (err, user) => {
-    if (err) {
-      return next(new AppError("Forbidden", 403));
+  jwt.verify(
+    token,
+    process.env.JWT_SECRET as string,
+    (err: VerifyErrors | null, decoded: JwtPayload | undefined | string) => {
+      if (err) {
+        return next(new AppError("Forbidden", 403));
+      }
+      if (decoded) {
+        req.user = decoded as IUser; // Cast to UserPayload if necessary
+      }
+      next();
     }
-    req.user = user;
-    next();
-  });
+  );
 };

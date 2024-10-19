@@ -1,8 +1,11 @@
-// src/@types/express.d.ts
-import { Request } from "express";
+// // src/@types/express.d.ts (or a similar path)
+// import * as express from "express";
+// import { IUser } from "../utils/types";
 
-declare module "express" {
-  export interface Request {
-    user?: any; // Use a more specific type if available
-  }
-}
+// declare global {
+//   namespace Express {
+//     interface Response {
+//       user?: IUser; // Add your custom property here
+//     }
+//   }
+// }

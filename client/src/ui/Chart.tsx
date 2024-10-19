@@ -51,7 +51,7 @@ const LidarChart = () => {
     const interval = setInterval(() => {
       // Simulate Lidar data with minor fluctuations around a base value
       setDataPoints((prevData) => {
-        return prevData.map((value) => {
+        return prevData.map(() => {
           const newValue = baseValue + faker.number.int({ min: -5, max: 5 });
           return Math.max(-1000, Math.min(1000, newValue)); // Keep values within the bounds
         });
@@ -88,24 +88,24 @@ const LidarChart = () => {
         position: "top" as const,
       },
     },
-    scales: {
-      x: {
-        ticks: {
-          callback: (value, index) => {
-            return labels[index]; // Return the timestamp directly from state
-          },
-        },
-        title: {
-          display: true,
-          text: "Time",
-        },
-      },
-      y: {
-        beginAtZero: false, // Do not start at zero
-        min: baseValue - 50, // Set a minimum value slightly below the base
-        max: baseValue + 50, // Set a maximum value slightly above the base
-      },
-    },
+    // scales: {
+    //   x: {
+    //     ticks: {
+    //       callback: (value: number, index: number) => {
+    //         return labels[index]; // Return the timestamp directly from state
+    //       },
+    //     },
+    //     title: {
+    //       display: true,
+    //       text: "Time",
+    //     },
+    //   },
+    //   y: {
+    //     beginAtZero: false, // Do not start at zero
+    //     min: baseValue - 50, // Set a minimum value slightly below the base
+    //     max: baseValue + 50, // Set a maximum value slightly above the base
+    //   },
+    // },
   };
 
   return (

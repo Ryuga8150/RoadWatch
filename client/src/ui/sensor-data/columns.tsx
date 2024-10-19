@@ -3,6 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { getProgressBarColor } from "@/utils/cn";
 import { splitTimestamp } from "@/utils/fn";
+import { SensorDataType } from "@/utils/types";
 import { ColumnDef } from "@tanstack/react-table";
 
 // This type is used to define the shape of our data.
@@ -14,7 +15,7 @@ export type SensorStatusType = {
   status: "active" | "inactive";
 };
 
-export const columns: ColumnDef<SensorStatusType>[] = [
+export const columns: ColumnDef<SensorDataType>[] = [
   {
     accessorKey: "timestamp",
     header: "Timestamp",

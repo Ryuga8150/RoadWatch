@@ -1,3 +1,4 @@
+import { SensorDataType } from "@/utils/types";
 import { SensorStatusType, columns } from "./columns";
 import { DataTable } from "./data-table";
 
@@ -22,7 +23,7 @@ const generateRandomInsightsData = (count: number): SensorDataType[] => {
       avgElevation,
       varElevation,
       locationId,
-      severityLevel,
+      severeLevel: severityLevel,
       type,
     });
   }

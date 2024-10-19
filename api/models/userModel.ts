@@ -1,17 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
-
-// Define the User interface
-interface IUser extends Document {
-  username: string;
-  email: string;
-  password: string;
-  avatar?: string; // Optional property
-  correctPassword(
-    candidatePassword: string,
-    userPassword: string
-  ): Promise<boolean>;
-}
+import { IUser } from "../utils/types";
 
 // Create the user schema
 const userSchema = new Schema<IUser>(

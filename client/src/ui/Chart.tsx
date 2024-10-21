@@ -88,24 +88,26 @@ const LidarChart = () => {
         position: "top" as const,
       },
     },
-    // scales: {
-    //   x: {
-    //     ticks: {
-    //       callback: (value: number, index: number) => {
-    //         return labels[index]; // Return the timestamp directly from state
-    //       },
-    //     },
-    //     title: {
-    //       display: true,
-    //       text: "Time",
-    //     },
-    //   },
-    //   y: {
-    //     beginAtZero: false, // Do not start at zero
-    //     min: baseValue - 50, // Set a minimum value slightly below the base
-    //     max: baseValue + 50, // Set a maximum value slightly above the base
-    //   },
-    // },
+    scales: {
+      x: {
+        // ticks: {
+        //   // this property is invalid
+        //   // callback: (value: number, index: number) => {
+        //   //   return labels[index]; // Return the timestamp directly from state
+        //   // },
+        // },
+        labels,
+        title: {
+          display: true,
+          text: "Time",
+        },
+      },
+      y: {
+        beginAtZero: false, // Do not start at zero
+        min: baseValue - 50, // Set a minimum value slightly below the base
+        max: baseValue + 50, // Set a maximum value slightly above the base
+      },
+    },
   };
 
   return (

@@ -49,10 +49,10 @@ export const columns: ColumnDef<SensorDataType>[] = [
     header: "Location ID",
   },
   {
-    accessorKey: "severityLevel",
+    accessorKey: "severeLevel",
     header: "Severity Level",
     cell: ({ row }) => {
-      const severityLevel = row.getValue("severityLevel") as string;
+      const severityLevel = row.getValue("severeLevel") as string;
       return (
         <div
           className={cn(

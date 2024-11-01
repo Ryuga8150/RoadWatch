@@ -4,6 +4,7 @@ import {
   DashboardIcon,
   DataIcon,
   SensorStatusIcon,
+  UploadIcon,
 } from "../utils/icons";
 import IconButton from "./IconButton";
 import Logo from "./Logo";
@@ -15,7 +16,6 @@ const Sidebar = (props: Props) => {
   return (
     <div className="row-span-full flex h-full w-full flex-col items-center gap-8 border-r-[1px] border-r-black/30 p-5">
       <Logo />
-
       <div className="align-items-center flex flex-grow flex-col gap-7 p-6">
         {[
           {
@@ -41,6 +41,12 @@ const Sidebar = (props: Props) => {
             to: "/complaint",
             icon: ComplaintIcon,
             color: "black",
+          },
+          {
+            title: "Upload",
+            to: "/upload",
+            icon: UploadIcon,
+            color: "#5d5d62",
           },
         ].map((item, ind) => {
           const Icon = item.icon;

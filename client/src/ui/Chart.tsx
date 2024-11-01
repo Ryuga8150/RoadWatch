@@ -22,7 +22,10 @@ ChartJS.register(
   Legend,
 );
 
-const LidarChart = () => {
+type Props = {
+  title: string;
+};
+const LidarChart = ({ title }: Props) => {
   const baseValue = 500; // A stable base value
   const initialDataPoints = Array.from(
     { length: 7 },
@@ -113,7 +116,7 @@ const LidarChart = () => {
   return (
     <div className="h-full w-full">
       <h2 className="mb-4 text-2xl font-semibold leading-[normal] text-black [font-family:Roboto]">
-        Realtime Data
+        {title ? title : "Realtime Data"}
       </h2>
       {isLoading ? (
         <div className="flex h-full items-center justify-center text-center text-xl text-gray-500">

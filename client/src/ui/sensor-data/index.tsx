@@ -1,5 +1,5 @@
 import { SensorDataType } from "@/utils/types";
-import { SensorStatusType, columns } from "./columns";
+import { columns } from "./columns";
 import { DataTable } from "./data-table";
 
 const generateRandomInsightsData = (count: number): SensorDataType[] => {

@@ -12,7 +12,7 @@ const Dashboard = (props: Props) => {
       {/* <SensorStatus /> */}
       <SensorStatusPreview />
       <span className="h-full w-full rounded-[20px] px-[29px] py-6 [background:#FFF]">
-        {/* <LocationMap /> */}
+        <LocationMap />
       </span>
       <SensorDataPreview />
       {/* <span className="w-full h-full [background:#FFF] rounded-[20px] py-6 px-[29px]">

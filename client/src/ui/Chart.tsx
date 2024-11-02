@@ -23,7 +23,7 @@ ChartJS.register(
 );
 
 type Props = {
-  title: string;
+  title?: string;
 };
 const LidarChart = ({ title }: Props) => {
   const baseValue = 500; // A stable base value

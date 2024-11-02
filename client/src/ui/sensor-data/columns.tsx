@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { getProgressBarColor } from "@/utils/cn";
 import { splitTimestamp } from "@/utils/fn";
 import { SensorDataType } from "@/utils/types";
 import { ColumnDef } from "@tanstack/react-table";

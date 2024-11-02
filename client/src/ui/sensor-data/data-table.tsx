@@ -16,13 +16,14 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { SensorDataType } from "@/utils/types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends SensorDataType, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -63,7 +64,8 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => {
                 console.log(row);
-
+                console.log(row.id, typeof row.id);
+                console.log(data[+row.id].segmentId);
                 return (
                   <TableRow
                     key={row.id}

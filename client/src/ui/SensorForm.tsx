@@ -48,6 +48,32 @@ function SensorForm() {
     toast.success("Sucessfully Submitted");
   }
 
+  const formFields: {
+    name: "title" | "date" | "location" | "timing";
+    label: string;
+    placeholder: string;
+  }[] = [
+    {
+      name: "title",
+      label: "Title",
+      placeholder: "Enter your title here...",
+    },
+    {
+      name: "date",
+      label: "Date",
+      placeholder: "2020-01-01",
+    },
+    {
+      name: "location",
+      label: "Location",
+      placeholder: "Delhi",
+    },
+    {
+      name: "timing",
+      label: "Timing",
+      placeholder: "23:59:59",
+    },
+  ];
   return (
     <div>
       <Form {...form}>
@@ -58,54 +84,24 @@ function SensorForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-5"
         >
-          {[
-            {
-              name: "title",
-              label: "Title",
-              placeholder: "Enter your title here...",
-            },
-            {
-              name: "date",
-              label: "Date",
-              placeholder: "2020-01-01",
-            },
-            {
-              name: "location",
-              label: "Location",
-              placeholder: "Delhi",
-            },
-            {
-              name: "timing",
-              label: "Timing",
-              placeholder: "23:59:59",
-            },
-          ].map(
-            (
-              {
-                name,
-                label,
-                placeholder,
-              }: { name: string; label: string; placeholder: string },
-              index,
-            ) => (
-              <FormField
-                key={index}
-                control={form.control}
-                name={name}
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <div className="flex items-center gap-5">
-                      <FormLabel className="w-20">{label}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={placeholder} {...field} />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ),
-          )}
+          {formFields.map(({ name, label, placeholder }, index: number) => (
+            <FormField
+              key={index}
+              control={form.control}
+              name={name}
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <div className="flex items-center gap-5">
+                    <FormLabel className="w-20">{label}</FormLabel>
+                    <FormControl>
+                      <Input placeholder={placeholder} {...field} />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
 
           <FormField
             control={form.control}

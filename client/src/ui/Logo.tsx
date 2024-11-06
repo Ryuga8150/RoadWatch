@@ -1,7 +1,4 @@
 import React from "react";
-import IconButton from "./IconButton";
-import { DashboardIcon } from "../utils/icons";
-
 type Props = {};
 
 const Logo = (props: Props) => {

@@ -2,21 +2,68 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { toast } from "sonner";
+import { useUser } from "@/providers/userProvider";
+import { useState } from "react";
+
+// Define Zod schema for validation
+const formSchema = z.object({
+  to: z.string().email({ message: "Please enter a valid email address." }),
+  subject: z
+    .string()
+    .min(5, { message: "Subject should be at least 5 characters long." }),
+  message: z
+    .string()
+    .min(10, { message: "Message should be at least 10 characters long." }),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 const ComplaintForm: React.FC = () => {
-  // State for form fields
-  const [to, setTo] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+  const url = import.meta.env.VITE_BACKEND_URL;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  });
+  const { user } = useUser();
+
+  // Loading state for form submission
+  const [loading, setLoading] = useState(false);
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Form submission logic
-    console.log({ to, subject, message });
-    toast.success("Complaint submitted successfully!");
+  const onSubmit = async (data: FormData) => {
+    try {
+      setLoading(true); // Set loading to true when submission starts
+
+      const res = await fetch(`${url}/api/complaint`, {
+        method: "POST",
+        body: JSON.stringify({ ...data, userId: user!.id }),
+        headers: {
+          "Content-type": "application/json",
+        },
+      });
+
+      const resData = await res.json();
+
+      if (resData.status === "success") {
+        toast.success("Complaint submitted successfully!");
+        reset();
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Client Side Error in Submission");
+    } finally {
+      setLoading(false); // Set loading to false after submission is complete
+    }
   };
 
   return (
@@ -25,7 +72,7 @@ const ComplaintForm: React.FC = () => {
         ISSUE A COMPLAINT
       </h2>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-grow flex-col justify-between"
       >
         {/* To Field */}
@@ -33,41 +80,60 @@ const ComplaintForm: React.FC = () => {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-6">
               <label
-                className="text-base font-medium text-[#7C819A] [font-family:Roboto]"
+                className="w-16 text-base font-medium text-[#7C819A] [font-family:Roboto]"
                 htmlFor="to"
               >
                 To
               </label>
-              <Input
-                id="to"
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-                type="email"
-                placeholder="Recipient's Email"
-                // flex-[1_0_0] text-black [font-family:Roboto] text-lg font-normal leading-[normal]
-                className="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-700 focus:border-indigo-500 focus:ring-indigo-500"
+              <Controller
+                name="to"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="to"
+                    {...field}
+                    type="email"
+                    placeholder="Recipient's Email"
+                    className="w-full rounded-md border border-gray-300 px-4 py-3 text-gray-700 focus:border-indigo-500 focus:ring-indigo-500"
+                  />
+                )}
               />
+              {errors.to && (
+                <span className="text-sm text-red-600">
+                  {errors.to.message}
+                </span>
+              )}
             </div>
             <Separator />
           </div>
-          {/* Subject Field */}
 
+          {/* Subject Field */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-6">
               <label
-                className="text-base font-medium text-[#7C819A] [font-family:Roboto]"
+                className="w-16 text-base font-medium text-[#7C819A] [font-family:Roboto]"
                 htmlFor="subject"
               >
                 Subject
               </label>
-              <Input
-                id="subject"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                type="text"
-                placeholder="Urgent Report of Deteriorating Road Conditions"
-                className="w-full rounded-md border border-gray-300 px-4 py-3 focus:border-indigo-500 focus:ring-indigo-500"
+              <Controller
+                name="subject"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="subject"
+                    {...field}
+                    type="text"
+                    placeholder="Urgent Report of Deteriorating Road Conditions"
+                    className="w-full rounded-md border border-gray-300 px-4 py-3 focus:border-indigo-500 focus:ring-indigo-500"
+                  />
+                )}
               />
+              {errors.subject && (
+                <span className="text-sm text-red-600">
+                  {errors.subject.message}
+                </span>
+              )}
             </div>
             <Separator />
           </div>
@@ -80,14 +146,24 @@ const ComplaintForm: React.FC = () => {
             >
               Message
             </label>
-            <Textarea
-              id="message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Dear [Recipient's Name/Title], I'm reporting deteriorating road conditions on Location ID 2500 and Segment ID 1001..."
-              className="w-full flex-grow rounded-md border border-gray-300 px-4 py-3 focus:border-indigo-500 focus:ring-indigo-500"
-              rows={6}
+            <Controller
+              name="message"
+              control={control}
+              render={({ field }) => (
+                <Textarea
+                  id="message"
+                  {...field}
+                  placeholder="Dear [Recipient's Name/Title], I'm reporting deteriorating road conditions on Location ID 2500 and Segment ID 1001..."
+                  className="w-full flex-grow rounded-md border border-gray-300 px-4 py-3 focus:border-indigo-500 focus:ring-indigo-500"
+                  rows={6}
+                />
+              )}
             />
+            {errors.message && (
+              <span className="text-sm text-red-600">
+                {errors.message.message}
+              </span>
+            )}
           </div>
         </div>
 
@@ -95,9 +171,34 @@ const ComplaintForm: React.FC = () => {
         <div className="mb-10 flex">
           <Button
             type="submit"
-            className="rounded-md bg-green-600 px-6 py-3 font-semibold text-white transition duration-200 hover:bg-green-700"
+            className={`rounded-md px-6 py-3 font-semibold text-white transition duration-200 ${
+              loading
+                ? "cursor-not-allowed bg-gray-400"
+                : "bg-green-600 hover:bg-green-700"
+            }`}
+            disabled={loading} // Disable button while loading
           >
-            Send
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <svg
+                  className="mr-3 h-5 w-5 animate-spin text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 3v3m0 12v3m9-9h-3m-12 0H3"
+                  />
+                </svg>
+                Submitting...
+              </div>
+            ) : (
+              "Send"
+            )}
           </Button>
         </div>
       </form>

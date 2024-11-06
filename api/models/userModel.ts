@@ -31,7 +31,7 @@ const userSchema = new Schema<IUser>(
 
 // Pre-save middleware to hash the password
 userSchema.pre<IUser>("save", async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
+  this.password = await bcrypt.hash(this.password as string, 12);
   console.log("Password hashed");
   next();
 });

@@ -50,7 +50,7 @@ export const signin = catchAsync(
 
     if (!user) return next(new AppError("No user exists with that email", 404));
 
-    if (!(await user.correctPassword(password, user.password))) {
+    if (!(await user.correctPassword(password, user.password as string))) {
       return next(new AppError("Invalid credentials", 401));
     }
 

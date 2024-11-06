@@ -10,9 +10,10 @@ process.on("uncaughtException", (err) => {
 
 // relative to main folder
 dotenv.config({ path: "./config.env" });
+
 // console.log(process.env);
 const DB = process.env.DATABASE?.replace(
-  "<PASSWORD>",
+  "<DATABASE_PASSWORD>",
   process.env.DATABASE_PASSWORD as string
 );
 
@@ -26,7 +27,7 @@ mongoose
   });
 
 const server = app.listen(3000, () => {
-  console.log("Server is listening");
+  console.log("Server is listening at Port 3000");
 });
 
 // LAST SAFETY NET

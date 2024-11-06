@@ -1,17 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import AppError from "./appError";
-import { IUser } from "./types"; // Adjust the import if necessary
+import { IUser, UserRequest } from "./types";
 
-interface MYRequest extends Request {
-  user?: IUser;
-}
-
-export const verifyUser = (
-  req: MYRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const verifyUser = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.jwt;
 
   if (!token) {

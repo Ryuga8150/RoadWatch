@@ -1,7 +1,7 @@
-import { SensorStatusType, columns } from "./columns";
+import { columns, RoadStatusType } from "./columns";
 import { DataTable } from "./data-table";
 
-function generateRandomSensorData(numSensors = 20): SensorStatusType[] {
+function generateRandomSensorData(numSensors = 20): RoadStatusType[] {
   const locations = [
     "location-1",
     "location-2",
@@ -15,34 +15,34 @@ function generateRandomSensorData(numSensors = 20): SensorStatusType[] {
     "location-10",
   ];
 
-  const statuses = ["active", "inactive"];
+  const severeLevelEnum = ["high", "medium", "low"];
 
-  const sensors: SensorStatusType[] = [];
+  const sensors: RoadStatusType[] = [];
   for (let i = 1; i <= numSensors; i++) {
     const location = locations[Math.floor(Math.random() * locations.length)];
     const progress = Math.floor(Math.random() * 101); // Progress between 0 and 100
-    const status = statuses[Math.floor(Math.random() * statuses.length)] as
-      | "active"
-      | "inactive";
+    const severeLevel = severeLevelEnum[
+      Math.floor(Math.random() * severeLevelEnum.length)
+    ] as "high" | "low" | "medium";
 
     sensors.push({
       id: `SENSOR-${String(i).padStart(3, "0")}`,
       location,
       progress,
-      status,
+      severeLevel,
     });
   }
 
   return sensors;
 }
 
-export default function SensorStatus() {
+export default function RoadStatus() {
   const data = generateRandomSensorData(20);
   return (
     <div className="container mx-auto h-full">
       <div className="flex h-full w-full flex-col gap-4 rounded-xl p-8 [background:#FFF]">
         <h2 className="text-2xl font-semibold uppercase leading-[normal] text-black [font-family:Roboto]">
-          Sensor Status
+          Road Status
         </h2>
         <DataTable columns={columns} data={data} />
       </div>

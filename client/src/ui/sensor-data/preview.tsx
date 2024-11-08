@@ -151,7 +151,7 @@ const SensorDataPreview = (props: Props) => {
           })}
       </div>
       <Link
-        to="sensor-data"
+        to="/sensor-data"
         className="mt-4 text-center text-xs font-normal uppercase leading-[normal] text-black [font-family:Inter]"
       >
         See more &rarr;

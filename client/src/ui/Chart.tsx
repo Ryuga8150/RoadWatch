@@ -75,7 +75,7 @@ const LidarChart = ({ title }: Props) => {
     labels: labels,
     datasets: [
       {
-        label: "Lidar Sensor Data",
+        label: "Ultrasonic Sensor Data",
         data: dataPoints, // Directly use the data points
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",

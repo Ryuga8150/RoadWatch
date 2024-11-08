@@ -124,7 +124,7 @@ const RoadStatusPreview = (props: Props) => {
         </div>
       ))}
       <Link
-        to="sensor-data"
+        to="/road-status"
         className="self-stretch text-center text-xs font-normal uppercase leading-[normal] text-black [font-family:Inter]"
       >
         See more &rarr;

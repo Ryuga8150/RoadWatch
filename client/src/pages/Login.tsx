@@ -21,9 +21,6 @@ import { useUser } from "@/providers/userProvider";
 import { User } from "@/utils/types";
 
 const FormSchema = z.object({
-  // username: z.string().min(2, {
-  //   message: "Username must be at least 2 characters.",
-  // }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
@@ -36,6 +33,9 @@ const Login: React.FC = () => {
   const url = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const { user, setUser } = useUser();
+
+  // Loading state for the submit button
+  const [loading, setLoading] = useState(false);
 
   // Redirect to dashboard if user is already logged in
   useEffect(() => {
@@ -51,16 +51,13 @@ const Login: React.FC = () => {
       password: "",
     },
   });
+
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    setLoading(true); // Set loading to true before starting the request
     try {
       const res = await fetch(`${url}/api/auth/signin`, {
-        // Adding method type
         method: "POST",
-
-        // Adding body or contents to send
         body: JSON.stringify(data),
-
-        // Adding headers to the request
         headers: {
           "Content-type": "application/json",
         },
@@ -69,7 +66,6 @@ const Login: React.FC = () => {
       const resData = await res.json();
 
       if (resData.status === "success") {
-        console.log(resData);
         const { _id, username, email, avatar, createdAt, updatedAt } =
           resData.data.user;
 
@@ -84,32 +80,30 @@ const Login: React.FC = () => {
           updatedAt,
         };
 
-        // Set the user state in context
         setUser(loggedInUser);
-        toast.success("Signed In SuccessFully");
+        toast.success("Signed In Successfully");
         navigate("/dashboard");
       } else if (resData.status === "fail") {
         toast.error(resData.message);
       } else {
-        alert("Unhandled reposnse status in SgnUp");
+        alert("Unhandled response status in SignIn");
       }
     } catch (err) {
-      console.log(err);
-      toast.error("Client Side Error in Sign In ");
+      console.error(err);
+      toast.error("Client Side Error in Sign In");
     } finally {
+      setLoading(false); // Set loading to false after the request finishes
       form.reset();
     }
   };
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100">
-      {/* <img src="/path/to/logo.png" alt="Logo" className="mb-6 w-32" />  */}
       <div className="w-1/4">
         <Avatar className="mb-6 h-20 w-full rounded-none">
           <AvatarImage src="./roadwatch-logo.png" alt="Roadwatch Logo" />
           <AvatarFallback>ROADWATCH LOGO</AvatarFallback>
         </Avatar>
-        {/* Replace with your logo path */}
         <h2 className="mb-4 text-center text-2xl font-bold uppercase [font-family:Roboto]">
           Login
         </h2>
@@ -159,8 +153,38 @@ const Login: React.FC = () => {
             <Button
               type="submit"
               className="w-full bg-green-800 hover:bg-green-900"
+              disabled={loading} // Disable the button when loading is true
             >
-              Submit
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <svg
+                    className="mr-2 h-5 w-5 animate-spin"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M14 2a10 10 0 0 1 0 20"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    />
+                  </svg>
+                  Loading...
+                </span>
+              ) : (
+                "Submit"
+              )}
             </Button>
           </form>
         </Form>

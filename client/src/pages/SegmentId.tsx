@@ -42,9 +42,9 @@ const SegmentId = () => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex h-full justify-between gap-10">
+        <div className="flex h-full w-full flex-col justify-between gap-10">
           <Heatmap />
-          <div className="flex w-[50%] flex-col gap-10">
+          <div className="grid h-full w-full grid-cols-2 gap-10">
             <LocationMap />
             <LidarChart title="Graph" />
           </div>

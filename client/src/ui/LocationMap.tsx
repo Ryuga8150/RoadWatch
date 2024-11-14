@@ -82,7 +82,7 @@ export default function LocationMap() {
   }, [lat, lng, zoom]);
 
   return (
-    <div className="flex h-full flex-col gap-4">
+    <div className="flex h-full w-full flex-col gap-4">
       <h2 className="text-2xl font-semibold leading-[normal] text-black [font-family:Roboto]">
         Location
       </h2>

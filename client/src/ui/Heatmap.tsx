@@ -8,6 +8,8 @@ interface SensorReading {
 
 // Define the grid dimensions
 const dimension = 31;
+const colDimension = 75;
+const rowDimension = 13;
 
 type ColorRanges = {
   green: string[];
@@ -59,7 +61,7 @@ const Heatmap: React.FC = () => {
         const response = await fetch("/road_data.json"); // Fetch data from public folder
         const data: SensorReading[] = await response.json();
         // Take the first `dimension * dimension` (900) readings
-        const filteredData = data.slice(0, dimension * dimension);
+        const filteredData = data.slice(0, colDimension * rowDimension);
 
         setSensorData(filteredData); // Set the filtered sensor data to state
       } catch (error) {
@@ -70,32 +72,52 @@ const Heatmap: React.FC = () => {
     fetchSensorData();
   }, []);
 
+  // Function to get the sensor data for the row in the correct order
+  const getRowData = (rowIndex: number) => {
+    const startIdx = rowIndex * colDimension;
+    const endIdx = startIdx + colDimension;
+    const rowData = sensorData.slice(startIdx, endIdx);
+
+    // Reverse every other row (odd index rows) to get right-to-left order
+    if (rowIndex % 2 !== 0) {
+      return rowData.reverse();
+    }
+
+    return rowData;
+  };
+
   return (
-    <div className="flex h-full flex-col items-center justify-center rounded-lg px-8">
+    <div className="flex h-full w-full flex-col items-center justify-center rounded-lg px-8">
       <h2 className="mb-4 self-start text-2xl font-semibold leading-[normal] text-black [font-family:Roboto]">
         Heatmap
       </h2>
       <div
-        className="grid gap-x-0 gap-y-0"
+        className="grid w-full gap-x-0 gap-y-0 overflow-x-scroll"
         style={{
-          gridTemplateColumns: `repeat(${dimension}, 1fr)`,
-          gridTemplateRows: `repeat(${dimension}, 1fr)`,
+          gridTemplateColumns: `repeat(${colDimension}, 1fr)`,
+          gridTemplateRows: `repeat(${rowDimension}, 1fr)`,
         }}
       >
-        {sensorData.map((segment, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-center font-bold text-white"
-            style={{
-              backgroundColor: getColorForDistance(Math.abs(segment.distance)),
-              height: "15px", // Set a fixed height for square cells
-              width: "15px", // Set a fixed width for square cells
-            }}
-          >
-            {/* Uncomment to see the exact distance value in each cell */}
-            {/* {segment.distance.toFixed(2)} */}
-          </div>
-        ))}
+        {Array.from({ length: rowDimension }, (_, rowIndex) => {
+          const rowData = getRowData(rowIndex);
+
+          return rowData.map((segment, index) => (
+            <div
+              key={rowIndex * colDimension + index} // Unique key for each cell
+              className="flex items-center justify-center font-bold text-white"
+              style={{
+                backgroundColor: getColorForDistance(
+                  Math.abs(segment.distance),
+                ),
+                height: "15px", // Set a fixed height for square cells
+                width: "15px", // Set a fixed width for square cells
+              }}
+            >
+              {/* Uncomment to see the exact distance value in each cell */}
+              {/* {segment.distance.toFixed(2)} */}
+            </div>
+          ));
+        })}
       </div>
     </div>
   );
